@@ -24,3 +24,17 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Animated underline on hover for nav links */
+.nav-link {
+  @apply relative text-white hover:text-blue-200 transition-all duration-300;
+}
+
+.nav-link::after {
+  content: "";
+  @apply absolute bottom-0 left-0 w-0 h-px bg-blue-300 transition-all duration-300;
+}
+
+.nav-link:hover::after {
+  @apply w-full;
+}

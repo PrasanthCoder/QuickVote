@@ -3,10 +3,10 @@
 import { AuthForm } from "@/components/AuthForm";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SignUpPage() {
+function SignUpInner() {
   const { user } = useAuth();
   const signupRouter = useRouter();
   const searchParams = useSearchParams();
@@ -32,5 +32,13 @@ export default function SignUpPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignUpInner />
+    </Suspense>
   );
 }

@@ -10,12 +10,13 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import { Suspense } from "react";
 import { auth } from "@/lib/firebase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FirebaseError } from "firebase/app";
 import Link from "next/link";
 
-export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
+export function AuthFormContent({ mode }: { mode: "signin" | "signup" }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +35,6 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
 
-      // Optional: Check if the email is verified (Google users usually are)
       if (!result.user.emailVerified) {
         await sendEmailVerification(result.user);
       }
@@ -60,29 +60,28 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
           password
         );
         if (!userCredential.user.emailVerified) {
-          await signOut(auth); // prevent access if not verified
+          await signOut(auth);
           setError("Please verify your email before logging in.");
           return;
         }
         router.push(returnTo || "/");
       } else {
-        if (password === repeatPassword) {
-          const userCredential = await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-          );
-          await updateProfile(userCredential.user, {
-            displayName: name,
-          });
-          await sendEmailVerification(userCredential.user);
-          await signOut(auth);
-          setError(
-            "Account created! Please check your email to verify your account."
-          );
-        } else {
+        if (password !== repeatPassword) {
           setError("Passwords do not match");
+          return;
         }
+
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        await updateProfile(userCredential.user, { displayName: name });
+        await sendEmailVerification(userCredential.user);
+        await signOut(auth);
+        setError(
+          "Account created! Please check your email to verify your account."
+        );
       }
     } catch (err: unknown) {
       setError(getErrorMessage((err as FirebaseError).code));
@@ -113,27 +112,27 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
           You need to sign in to vote on this poll.
         </div>
       )}
+      {mode === "signup" && (
+        <div className="py-2">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Name
+          </label>
+          <input
+            id="name"
+            type="text"
+            placeholder="your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-2 border rounded mt-1"
+            required
+            minLength={6}
+          />
+        </div>
+      )}
       <div>
-        {mode === "signup" && (
-          <div className="py-2">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              placeholder="your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-2 border rounded mt-1"
-              required
-              minLength={6}
-            />
-          </div>
-        )}
         <label
           htmlFor="email"
           className="block text-sm font-medium text-gray-700"
@@ -150,7 +149,6 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
           required
         />
       </div>
-
       <div>
         <label
           htmlFor="password"
@@ -175,7 +173,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
             htmlFor="repeat-password"
             className="block text-sm font-medium text-gray-700"
           >
-            Password
+            Repeat Password
           </label>
           <input
             id="repeat-password"
@@ -189,13 +187,11 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
           />
         </div>
       )}
-
       {error && (
         <div className="p-3 bg-red-50 text-red-600 rounded text-sm">
           {error}
         </div>
       )}
-
       <button
         type="submit"
         disabled={loading}
@@ -205,9 +201,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
       >
         {loading ? "Processing..." : mode === "signin" ? "Sign In" : "Sign Up"}
       </button>
-
       <div className="text-center text-sm text-gray-500 my-2">or</div>
-
       <button
         type="button"
         onClick={handleGoogleLogin}
@@ -216,6 +210,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
           loading ? "bg-gray-400" : "bg-gray-500 hover:bg-gray-600"
         }`}
       >
+        {/* Google icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 48 48"
@@ -251,5 +246,13 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
         </p>
       )}
     </form>
+  );
+}
+
+export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
+  return (
+    <Suspense fallback={<div>Loading form...</div>}>
+      <AuthFormContent mode={mode} />
+    </Suspense>
   );
 }

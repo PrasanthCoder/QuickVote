@@ -35,7 +35,7 @@ export default function AboutPage() {
       >
         <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-blue-500">
           <Image
-            src="https://drive.google.com/uc?export=view&id=1ahCM8wMSbh86hTa84UPnUzYOMVjAeoGG" // Ensure this is in public/ as profile.png
+            src="/images/my_photo.webp" // Ensure this is in public/ as profile.png
             alt="Prasanth Daneti"
             fill
             className="object-cover"

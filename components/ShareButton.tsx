@@ -90,7 +90,7 @@ export function ShareButton({ pollId }: { pollId: string | undefined }) {
     <div className="relative my-3" ref={shareRef}>
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-3 py-2 bg-blue-500 hover:bg-gray-400 rounded-lg transition"
+        className="flex items-center gap-2 px-3 py-2 sm:mx-2 bg-blue-500 hover:bg-gray-400 rounded-lg transition"
       >
         <Share2Icon size={16} />
         <span>Share</span>

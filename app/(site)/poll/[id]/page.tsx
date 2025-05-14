@@ -91,10 +91,10 @@ export default function PollPage() {
               onClick={() => setSelectedOption(i)}
             >
               {/* Option Row: Radio Indicator, Option Text, and Percentage */}
-              <div className="flex items-start space-x-3 mb-2">
+              <div className="flex items-center space-x-3 mb-2">
                 {/* Radio Indicator */}
                 <div
-                  className={`flex-shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center mt-1
+                  className={`flex-shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center
                     ${
                       isSelected
                         ? "border-blue-500 bg-blue-500"

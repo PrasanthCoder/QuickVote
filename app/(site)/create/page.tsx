@@ -108,7 +108,7 @@ export default function CreatePoll() {
 
   if (!user)
     return (
-      <div className="max-w-md mx-auto mt-10 text-center">
+      <div className="max-w-md mx-auto text-center px-4 py-30">
         <p className="mb-4">You need to sign in to create polls</p>
         <Link href="/signin" className="text-blue-500 hover:underline">
           Sign In

@@ -226,7 +226,7 @@ export default function CreatePoll() {
   return (
     <form
       onSubmit={createPoll}
-      className="max-w-md mx-auto mt-10 space-y-4 px-4 py-8"
+      className="max-w-md mx-auto space-y-4 px-4 py-30"
     >
       <div>
         <div className="flex items-center justify-between mb-2">

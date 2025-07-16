@@ -19,7 +19,7 @@ function SignUpInner() {
   }, [returnTo, signupRouter, user]);
 
   return (
-    <div className="max-w-md mx-auto mt-10 px-4 py-8">
+    <div className="max-w-md mx-auto px-4 py-30">
       <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
       <AuthForm mode="signup" />
       <p className="mt-4 text-center">

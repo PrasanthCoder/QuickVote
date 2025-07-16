@@ -32,7 +32,7 @@ export default function Home() {
     <main className="min-h-screen bg-black text-white">
       {/* Hero Section */}
       <motion.section
-        className="text-center py-24 px-6 bg-gradient-to-br from-gray-900 via-black to-blue-950 shadow-sm"
+        className="text-center pb-24 pt-40 px-6 bg-gradient-to-br from-gray-900 via-black to-blue-950 shadow-sm"
         initial="hidden"
         animate="visible"
         variants={sectionVariants}
@@ -51,7 +51,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.4 }}
         >
-          Create polls instantly. Get AI-suggested options. Analyze votes in
+          Create polls instantly. Get AI enabled interface. Analyze votes in
           real-time. Share effortlessly.
         </motion.p>
         <Link
@@ -83,11 +83,11 @@ export default function Home() {
               size={40}
             />
             <h3 className="text-xl font-semibold mt-4 text-white">
-              AI Suggestions
+              AI Assisted Polls
             </h3>
             <p className="mt-2 text-gray-300">
-              Get intelligent poll option suggestions powered by AI to save time
-              and spark ideas.
+              Get intelligent poll suggestions powered by AI to save time and
+              spark ideas.
             </p>
           </motion.div>
           <motion.div

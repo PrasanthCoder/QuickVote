@@ -19,7 +19,7 @@ function SignInInner() {
   }, [returnTo, router, user]);
 
   return (
-    <div className="max-w-md mx-auto mt-10 px-4 py-8">
+    <div className="max-w-md mx-auto px-4 py-30">
       <h1 className="text-2xl font-bold mb-6">Sign In</h1>
       <AuthForm mode="signin" />
       <p className="mt-4 text-center">

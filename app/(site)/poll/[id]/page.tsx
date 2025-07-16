@@ -76,7 +76,7 @@ export default function PollPage() {
   // Show not found state if poll doesn't exist
   if (pollNotFound) {
     return (
-      <div className="max-w-md mx-auto mt-10 text-center text-gray-200">
+      <div className="max-w-md mx-auto text-center text-gray-200 px-4 py-30">
         The poll you are looking for doesn&apos;t exist or deleted
       </div>
     );
@@ -89,7 +89,7 @@ export default function PollPage() {
   );
 
   return (
-    <div className="w-full max-w-lg mx-auto mt-10 px-4 py-8">
+    <div className="w-full max-w-lg mx-auto px-4 py-30">
       {/* Poll Title and Share Button */}
       <h1 className="text-2xl font-bold text-gray-200">{poll!.title}</h1>
       <ShareButton pollId={poll!.id} />

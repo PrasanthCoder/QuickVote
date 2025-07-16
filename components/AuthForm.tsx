@@ -145,7 +145,7 @@ export function AuthFormContent({ mode }: { mode: "signin" | "signup" }) {
           placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded mt-1"
+          className="w-full p-2 border rounded mt-1 "
           required
         />
       </div>

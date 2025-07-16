@@ -21,9 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <Navbar />
           <main className="min-h-screen bg-black">
-            <div className="container mx-auto">{children}</div>
+            <Navbar />
+            <div className="mx-auto">{children}</div>
           </main>
           <Footer />
         </AuthProvider>

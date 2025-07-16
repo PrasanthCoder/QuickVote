@@ -45,14 +45,14 @@ export function Navbar() {
   if (loading) return null;
 
   return (
-    <>
+    <div className="absolute w-full">
       <motion.nav
         className="bg-blue-950 shadow-md z-50"
         initial="hidden"
         animate="visible"
         variants={navVariants}
       >
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
           {/* Logo */}
           <Link
             href="/"
@@ -180,7 +180,7 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
 

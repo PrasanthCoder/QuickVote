@@ -6,7 +6,7 @@ import { Sparkles, BarChart3, Share2, Github, Linkedin } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-16">
+    <main className="min-h-screen bg-black text-white px-6 py-30">
       {/* Heading */}
       <motion.section
         initial={{ opacity: 0, y: 40 }}
@@ -90,8 +90,8 @@ export default function AboutPage() {
           {[
             {
               icon: <Sparkles size={24} />,
-              title: "AI-Suggested Options",
-              desc: "Get smart, context-aware poll options generated instantly by AI.",
+              title: "AI-Assisted Polls",
+              desc: "Get smart, context-aware poll options and question generated instantly by AI.",
             },
             {
               icon: <BarChart3 size={24} />,

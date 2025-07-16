@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 @theme inline {
@@ -37,4 +37,12 @@ body {
 
 .nav-link:hover::after {
   @apply w-full;
+}
+
+input ::placeholder {
+  color: #6a7282;
+}
+
+input {
+  color: #d1d5dc;
 }

@@ -45,7 +45,7 @@ export function Navbar() {
   if (loading) return null;
 
   return (
-    <div className="absolute w-full">
+    <div className="absolute w-full z-2">
       <motion.nav
         className="bg-blue-950 shadow-md z-50"
         initial="hidden"

@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     const api_key: string = process.env.GOOGLE_AI_API_KEY!;
     const ai = new GoogleGenAI({ apiKey: api_key });
-    const model = "gemini-2.0-flash";
+    const model = "gemini-2.5-flash";
 
     const exclusionText =
       usedOptions.length > 0
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 }

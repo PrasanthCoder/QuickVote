@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     if (!title || !options) {
       return NextResponse.json(
         { error: "Title and options are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -16,12 +16,12 @@ export async function POST(request: Request) {
     if (!apiKey) {
       return NextResponse.json(
         { error: "API key not configured" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     const ai = new GoogleGenAI({ apiKey });
-    const model = "gemini-2.0-flash";
+    const model = "gemini-2.5-flash";
 
     const prompt = `Given the following poll title and options, suggest a single category that best describes the poll. Return only the category name as plain text (e.g., Entertainment, Technology, Food, Sports). Do not include explanations or extra text.
 
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     console.error("Error categorizing poll:", error);
     return NextResponse.json(
       { error: "Failed to categorize poll" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

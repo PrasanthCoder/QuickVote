@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QuickVote 📊⚡
 
-## Getting Started
+QuickVote is a real-time poll creation and sharing platform that allows users to create polls, share them using a unique Poll ID, and view live voting analytics instantly.
 
-First, run the development server:
+The platform leverages **AI assistance** to improve poll quality by generating options, refining questions, and categorizing polls — making it easy to create clear and engaging polls in seconds.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+QuickVote uses **Firebase Authentication** for user management and **Firebase Database** for real-time data synchronization.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Live Demo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+👉 https://quickvotepoll.vercel.app/
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ✨ Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 🗳 Create polls with a unique Poll ID
+- 🔗 Share polls easily using the Poll ID
+- ⚡ Real-time voting and live analytics
+- 📊 Instant result updates using Firebase real-time sync
+- 🔐 User authentication with Firebase
+- 🧠 AI-generated poll options, question rephrasing and poll categorisation
+- 🎨 Clean, responsive UI
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🧠 How It Works
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Users sign in using Firebase Authentication
+2. A user creates a poll with a question
+3. AI can:
+   - Suggest poll options
+   - Rewrite the question for better clarity
+   - Automatically categorize the poll
+4. A unique **Poll ID** is generated
+5. Anyone with the Poll ID can vote
+6. Votes are stored in Firebase Database
+7. Results update in real time for all participants
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🧠 AI Assistance
+
+QuickVote integrates AI to enhance poll creation:
+
+### 🔹 AI Option Generation
+- Automatically generates relevant and balanced poll options
+
+### 🔹 Question Refinement
+- Rewrites ambiguous questions into concise, clear versions
+
+### 🔹 Poll Categorization
+- Assigns a category such as *Technology, Feedback, Opinion, Sports*, etc.
+
+👉 AI is used only during poll creation — voting remains fast and lightweight.
+
+---
+
+## ⚡ Real-Time Poll Analytics
+
+- Votes are synced instantly via Firebase Database
+- Users see:
+  - Live vote counts
+  - Percentage distribution
+  - Poll engagement updates in real time
+
+---
+
+## 🔐 Authentication & Data Management
+
+### 🔹 Authentication
+- Firebase Authentication
+- Secure user sign-in
+- Poll creation tied to authenticated users
+
+### 🔹 Database
+- Firebase Database (real-time sync)
+- Polls, votes, and analytics stored securely
+- Automatic updates pushed to connected clients
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- Next.js / React
+- Tailwind CSS
+
+### Backend / Services
+- Firebase Authentication
+- Firebase Database (real-time data)
+- AI api services for poll assistance
+
+### Deployment
+- Cloud-based deployment (Vercel)
+
+---
+

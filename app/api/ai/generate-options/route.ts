@@ -1,11 +1,5 @@
 import Cerebras from "@cerebras/cerebras_cloud_sdk";
 
-export const runtime = "edge"; // Keep Edge support as requested
-
-/**
- * Minimal Cerebras response shape
- * (SDK returns `unknown`, so we safely narrow it)
- */
 interface CerebrasChatCompletion {
   choices: Array<{
     message: {

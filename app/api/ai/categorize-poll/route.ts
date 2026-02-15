@@ -1,8 +1,22 @@
 import { NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
+import Cerebras from "@cerebras/cerebras_cloud_sdk";
+
+/**
+ * Minimal response shape returned by Cerebras chat completions
+ * (SDK returns `unknown`, so we safely narrow it)
+ */
+interface CerebrasChatCompletion {
+  choices: Array<{
+    message: {
+      role: "assistant" | "user" | "system";
+      content: string;
+    };
+  }>;
+}
 
 export async function POST(request: Request) {
   try {
+    console.log("going in api category");
     const { title, options } = await request.json();
 
     if (!title || !options) {
@@ -12,7 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const apiKey = process.env.GOOGLE_AI_API_KEY;
+    const apiKey = process.env.CEREBRAS_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
         { error: "API key not configured" },
@@ -20,23 +34,37 @@ export async function POST(request: Request) {
       );
     }
 
-    const ai = new GoogleGenAI({ apiKey });
-    const model = "gemini-2.5-flash";
+    const client = new Cerebras({ apiKey });
 
-    const prompt = `Given the following poll title and options, suggest a single category that best describes the poll. Return only the category name as plain text (e.g., Entertainment, Technology, Food, Sports). Do not include explanations or extra text.
+    const prompt = `Given the following poll title and options, suggest a single category that best describes the poll.
 
-    Title: "${title}"
-    Options: ${JSON.stringify(options)}
+Return ONLY the category name as plain text.
+Do NOT include explanations.
 
-    Suggested Category:`;
+Examples: Entertainment, Technology, Food, Sports
 
-    const response = await ai.models.generateContent({
-      model,
-      contents: prompt,
+Title: "${title}"
+Options: ${JSON.stringify(options)}
+
+Category:`;
+
+    const response = await client.chat.completions.create({
+      model: "llama-3.3-70b",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.2,
+      max_tokens: 10,
     });
 
+    console.log(response);
+
+    // Narrow unknown → known shape
+    const completion = response as CerebrasChatCompletion;
+
     const category =
-      response?.text?.trim().replace(/^"|"$/g, "") || "Uncategorized";
+      completion.choices[0]?.message?.content?.trim().replace(/^"|"$/g, "") ||
+      "Uncategorized";
+
+    console.log(category);
 
     return NextResponse.json({ category });
   } catch (error) {

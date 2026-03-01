@@ -48,16 +48,16 @@ Refined question:`;
       model: "gpt-oss-120b",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.4,
-      max_tokens: 50,
+      max_tokens: 500,
     });
 
     // Narrow unknown → known shape
     const completion = response as CerebrasChatCompletion;
-
+    console.log("completion: ", completion);
     const refined =
       completion.choices[0]?.message?.content?.trim().replace(/^"|"$/g, "") ||
       question;
-
+    console.log("refined: ", refined);
     return NextResponse.json({ refined });
   } catch (error) {
     console.error("AI Error:", error);

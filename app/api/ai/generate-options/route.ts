@@ -49,7 +49,7 @@ Options JSON array:`;
       model: "gpt-oss-120b",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
-      max_tokens: 150,
+      max_tokens: 500,
     });
 
     // Narrow unknown → known shape

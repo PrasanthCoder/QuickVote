@@ -52,7 +52,7 @@ Category:`;
       model: "gpt-oss-120b",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.3,
-      max_tokens: 10,
+      max_tokens: 500,
     });
 
     console.log(response);

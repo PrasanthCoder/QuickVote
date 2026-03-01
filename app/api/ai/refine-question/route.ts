@@ -45,9 +45,9 @@ Question: "${question}"
 Refined question:`;
 
     const response = await client.chat.completions.create({
-      model: "llama-3.3-70b",
+      model: "gpt-oss-120b",
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
+      temperature: 0.4,
       max_tokens: 50,
     });
 

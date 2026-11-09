@@ -12,7 +12,7 @@ import { db } from "../../../lib/firebase";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import { Sparkles, X } from "lucide-react";
+import { Sparkles, X, Loader2 } from "lucide-react";
 import { useAIOptions } from "@/hooks/useAIOptions";
 import { useRefinedQuestion } from "@/hooks/useRefinedQuestion";
 import { useAICategory } from "@/hooks/useAICategory";
@@ -95,13 +95,13 @@ export default function CreatePoll() {
     if (!refining && refined && refined !== form.title) {
       setShowRefined(true);
     } else {
-      setShowRefined(false); // Hide if refining or if refined matches the current title
+      setShowRefined(false);
     }
-  }, [refining, refined, form.title]); // Add form.title as a dependency
+  }, [refining, refined, form.title]);
 
   // Hide refined suggestion when the user modifies the title
   useEffect(() => {
-    setShowRefined(false); // Hide refined suggestion whenever title changes
+    setShowRefined(false);
   }, [form.title]);
 
   if (loading) return <div className="text-center mt-10">Loading...</div>;
@@ -126,7 +126,6 @@ export default function CreatePoll() {
   const createPoll = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate at least 2 options with content
     const validOptions = form.options
       .filter((opt) => opt.value.trim() !== "")
       .map((opt) => opt.value);
@@ -159,7 +158,6 @@ export default function CreatePoll() {
     } catch (error) {
       console.error("Error creating poll:", error);
       alert("Failed to create poll. Please try again.");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -205,6 +203,8 @@ export default function CreatePoll() {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    if (submitting) return;
+
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -237,14 +237,14 @@ export default function CreatePoll() {
             type="button"
             onClick={() => {
               if (form.title.trim().length > 10) {
-                setShowRefined(false); // Hide immediately to prevent flicker
+                setShowRefined(false);
                 refineQuestion(form.title);
               } else {
                 alert("Please enter a longer question to refine");
               }
             }}
-            disabled={refining}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 text-xs"
+            disabled={refining || submitting}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed text-xs"
           >
             <Sparkles className="h-4 w-4" />
             {refining ? "Refining..." : "Refine Question"}
@@ -255,10 +255,11 @@ export default function CreatePoll() {
           id="question"
           placeholder="What's your favorite..."
           value={form.title}
+          disabled={submitting}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
             setForm((prev) => ({ ...prev, title: e.target.value }))
           }
-          className="w-full p-3 border rounded-lg min-h-[100px]"
+          className="w-full p-3 border rounded-lg min-h-[100px] disabled:bg-gray-100 disabled:cursor-not-allowed"
           required
         />
         <AnimatePresence>
@@ -275,7 +276,8 @@ export default function CreatePoll() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="mt-1 px-3 py-1 bg-gray-100 border rounded hover:bg-gray-200 text-sm flex-grow text-left"
+                  disabled={submitting}
+                  className="mt-1 px-3 py-1 bg-gray-100 border rounded hover:bg-gray-200 text-sm flex-grow text-left disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={() =>
                     setForm((prev) => ({ ...prev, title: refined }))
                   }
@@ -284,7 +286,8 @@ export default function CreatePoll() {
                 </button>
                 <button
                   type="button"
-                  className="mt-1 p-1 text-gray-500 hover:text-gray-700"
+                  disabled={submitting}
+                  className="mt-1 p-1 text-gray-500 hover:text-gray-700 disabled:opacity-50"
                   onClick={() => setShowRefined(false)}
                   aria-label="Dismiss refined question"
                 >
@@ -305,15 +308,15 @@ export default function CreatePoll() {
         <button
           type="button"
           onClick={handleGenerateOptions}
-          className="flex items-center gap-2 px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm mb-4"
-          disabled={isLoading}
+          className="flex items-center gap-2 px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm mb-4"
+          disabled={isLoading || submitting}
         >
           <Sparkles className="h-4 w-4" />
           {isLoading
             ? "Generating..."
             : hasGenerated
-            ? "Generate More AI Suggestions"
-            : "Generate AI Suggestions"}
+              ? "Generate More AI Suggestions"
+              : "Generate AI Suggestions"}
         </button>
 
         <AnimatePresence>
@@ -332,7 +335,8 @@ export default function CreatePoll() {
                 </div>
                 <button
                   type="button"
-                  className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1"
+                  disabled={submitting}
+                  className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1 disabled:opacity-50"
                   onClick={dismissAllSuggestions}
                 >
                   <X className="h-4 w-4" />
@@ -352,14 +356,15 @@ export default function CreatePoll() {
                       <button
                         type="button"
                         onClick={() => addSuggestion(suggestion)}
-                        className="px-3 py-1.5 bg-white border rounded-full text-sm hover:bg-gray-100 transition"
-                        disabled={form.options.length >= 6}
+                        className="px-3 py-1.5 bg-white border rounded-full text-sm hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={form.options.length >= 6 || submitting}
                       >
                         {suggestion}
                       </button>
                       <button
                         type="button"
-                        className="p-1 text-gray-500 hover:text-gray-700"
+                        disabled={submitting}
+                        className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-50"
                         onClick={() => dismissSuggestion(suggestion)}
                         aria-label="Dismiss suggestion"
                       >
@@ -386,7 +391,9 @@ export default function CreatePoll() {
             items={form.options.map((opt) => opt.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-3">
+            <div
+              className={`space-y-3 ${submitting ? "opacity-60 pointer-events-none" : ""}`}
+            >
               {form.options.map((opt, i) => (
                 <SortableOption
                   key={opt.id}
@@ -406,6 +413,7 @@ export default function CreatePoll() {
       {form.options.length < 6 && (
         <button
           type="button"
+          disabled={submitting}
           onClick={() => {
             setForm((prev) => ({
               ...prev,
@@ -416,7 +424,7 @@ export default function CreatePoll() {
             }));
             setNextOptionId((prev) => prev + 1);
           }}
-          className="text-blue-500 hover:text-blue-700 text-sm font-medium"
+          className="text-blue-500 hover:text-blue-700 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           + Add Option
         </button>
@@ -431,8 +439,8 @@ export default function CreatePoll() {
           <button
             type="button"
             onClick={handleGenerateCategory}
-            disabled={categoryLoading}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 text-xs"
+            disabled={categoryLoading || submitting}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed text-xs"
           >
             <Sparkles className="h-4 w-4" />
             {categoryLoading ? "Generating..." : "Generate Category"}
@@ -443,10 +451,11 @@ export default function CreatePoll() {
           type="text"
           placeholder="e.g., Entertainment, Food (leave blank for Uncategorized)"
           value={form.category}
+          disabled={submitting}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setForm((prev) => ({ ...prev, category: e.target.value }))
           }
-          className="w-full p-3 border rounded-lg"
+          className="w-full p-3 border rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed"
         />
         {categoryError && (
           <p className="text-red-500 text-sm mt-1">{categoryError}</p>
@@ -456,11 +465,20 @@ export default function CreatePoll() {
       <button
         type="submit"
         disabled={submitting}
-        className={`w-full p-3 rounded text-white ${
-          submitting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+        className={`w-full p-3 rounded text-white flex items-center justify-center gap-2 transition ${
+          submitting
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-500 hover:bg-blue-600"
         }`}
       >
-        {submitting ? "Creating..." : "Create Poll"}
+        {submitting ? (
+          <>
+            <Loader2 className="h-5 w-5 animate-spin" />
+            <span>Creating Poll...</span>
+          </>
+        ) : (
+          "Create Poll"
+        )}
       </button>
     </form>
   );

@@ -1,13 +1,6 @@
-import Cerebras from "@cerebras/cerebras_cloud_sdk";
+import Groq from "groq-sdk";
 
-interface CerebrasChatCompletion {
-  choices: Array<{
-    message: {
-      role: "assistant" | "user" | "system";
-      content: string;
-    };
-  }>;
-}
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(request: Request) {
   try {
@@ -20,15 +13,12 @@ export async function POST(request: Request) {
       });
     }
 
-    const apiKey = process.env.CEREBRAS_API_KEY;
-    if (!apiKey) {
+    if (!process.env.GROQ_API_KEY) {
       return new Response(JSON.stringify({ error: "API key not configured" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
     }
-
-    const client = new Cerebras({ apiKey });
 
     const exclusionText =
       usedOptions.length > 0
@@ -45,19 +35,18 @@ ${exclusionText}
 
 Options JSON array:`;
 
-    const response = await client.chat.completions.create({
-      model: "llama3.1-8b",
+    const completion = await groq.chat.completions.create({
+      model: "openai/gpt-oss-20b",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       max_tokens: 500,
     });
 
-    // Narrow unknown → known shape
-    const completion = response as CerebrasChatCompletion;
+    const rawText =
+      completion.choices[0]?.message?.content
+        ?.trim()
+        .replace(/^```json\s*|^```\s*|```$/g, "") ?? "[]";
 
-    const rawText = completion.choices[0]?.message?.content?.trim() ?? "[]";
-
-    // Parse JSON safely
     let options: string[] = [];
     try {
       options = JSON.parse(rawText);

@@ -17,6 +17,7 @@
     "@heroicons/react": "^2.2.0",
     "firebase": "^11.6.0",
     "framer-motion": "^12.9.4",
+    "groq-sdk": "^1.6.0",
     "lucide-react": "^0.487.0",
     "next": "15.2.8",
     "react": "^19.0.0",

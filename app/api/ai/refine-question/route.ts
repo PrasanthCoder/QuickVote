@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import Cerebras from "@cerebras/cerebras_cloud_sdk";
+import Groq from "groq-sdk";
 
-/**
- * Minimal Cerebras response shape
- * (SDK returns `unknown`, so we safely narrow it)
- */
-interface CerebrasChatCompletion {
-  choices: Array<{
-    message: {
-      role: "assistant" | "user" | "system";
-      content: string;
-    };
-  }>;
-}
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,15 +14,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const apiKey = process.env.CEREBRAS_API_KEY;
-    if (!apiKey) {
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
         { message: "API key not configured" },
         { status: 500 },
       );
     }
-
-    const client = new Cerebras({ apiKey });
 
     const prompt = `Improve and refine the following poll question for clarity and conciseness. the refined one should not add extra context.
 
@@ -44,20 +30,17 @@ Question: "${question}"
 
 Refined question:`;
 
-    const response = await client.chat.completions.create({
-      model: "llama3.1-8b",
+    const completion = await groq.chat.completions.create({
+      model: "openai/gpt-oss-20b",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.4,
       max_tokens: 500,
     });
 
-    // Narrow unknown → known shape
-    const completion = response as CerebrasChatCompletion;
-    console.log("completion: ", completion);
     const refined =
       completion.choices[0]?.message?.content?.trim().replace(/^"|"$/g, "") ||
       question;
-    console.log("refined: ", refined);
+
     return NextResponse.json({ refined });
   } catch (error) {
     console.error("AI Error:", error);
